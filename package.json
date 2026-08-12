@@ -1,0 +1,36 @@
+{
+  "name": "game-mkt",
+  "private": true,
+  "version": "1.2.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@opentelemetry/api": "^1.9.1",
+    "express": "^5.2.1",
+    "langchain": "^1.4.2",
+    "motion": "^12.38.0",
+    "pinia": "^3.0.4",
+    "socket.io": "^4.8.3",
+    "three": "^0.183.2",
+    "vue": "^3.5.32",
+    "vue-router": "^4.6.0",
+    "xstate": "^5.31.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.2.2",
+    "@types/node": "^24.12.2",
+    "@types/three": "^0.183.1",
+    "@vitejs/plugin-vue": "^6.0.5",
+    "@vue/tsconfig": "^0.9.1",
+    "autoprefixer": "^10.5.0",
+    "postcss": "^8.5.10",
+    "tailwindcss": "^4.2.2",
+    "typescript": "~6.0.2",
+    "vite": "^8.0.4",
+    "vue-tsc": "^3.2.6"
+  }
+}
