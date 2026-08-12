@@ -221,6 +221,17 @@ npm run lint
 - `POST /api/predictive-lead-ai/rank` - Ranking de lista de leads
 - `POST /api/predictive-lead-ai/conversion-window` - Janela prevista de conversao
 
+### Interplanetary Experience
+- `POST /api/interplanetary/experience/create` - Criar experiencia imersiva
+- `POST /api/interplanetary/experience/simulate` - Simular conversao e imersao
+- `POST /api/interplanetary/experience/purchase` - Fechar venda holografica
+- `GET /api/interplanetary/experience/catalog` - Listar catalogo-base
+- `GET /api/interplanetary/experience/telemetry` - Snapshot de auditoria e receita
+
+### Earth Market Adoption Runtime (WAVE P15)
+- `POST /api/earth-market-adoption/evaluate` - Avaliar adocao, resposta populacional, impacto de campanha, demanda, comportamento e engajamento
+- `POST /api/earth-market-adoption/simulate` - Consolidar readiness de adocao com contexto macro de mercado
+
 ## 🧩 Exemplos dos Novos Endpoints
 
 ### 1) Campaign Contracts
@@ -294,6 +305,56 @@ curl -X POST "http://localhost:8000/api/growth-runtime/plan" \
 Request (`POST /api/growth-runtime/plan`):
 
 ```json
+
+	### 4) Earth Market Adoption Runtime (WAVE P15)
+
+	Teste rapido com curl:
+
+	```bash
+	curl -X POST "http://localhost:8000/api/earth-market-adoption/evaluate" \
+		-H "Content-Type: application/json" \
+		-d '{
+			"population_size": 1500000,
+			"reachable_population": 900000,
+			"awareness_rate": 0.62,
+			"trial_rate": 0.49,
+			"repeat_rate": 0.57,
+			"organic_growth": 0.45,
+			"trust_index": 0.64,
+			"utility_score": 0.70,
+			"price_accessibility": 0.58,
+			"social_proof": 0.52,
+			"campaign_reach": 0.66,
+			"campaign_quality": 0.60,
+			"campaign_frequency": 5,
+			"base_demand": 0.61,
+			"seasonality": 0.54,
+			"supply_friction": 0.26,
+			"basket_growth": 0.46,
+			"churn_rate": 0.29,
+			"stakeholder_alignment": 0.63,
+			"partner_activation": 0.55,
+			"regulator_support": 0.48,
+			"community_advocacy": 0.60
+		}'
+	```
+
+	Simulacao consolidada:
+
+	```bash
+	curl -X POST "http://localhost:8000/api/earth-market-adoption/simulate" \
+		-H "Content-Type: application/json" \
+		-d '{
+			"population_size": 1500000,
+			"reachable_population": 900000,
+			"awareness_rate": 0.62,
+			"trial_rate": 0.49,
+			"repeat_rate": 0.57,
+			"reputation_score": 0.81,
+			"adoption_rate": 0.64,
+			"engagement_rate": 0.74
+		}'
+	```
 {
 	"north_star_metric": "pipeline_qualificado",
 	"baseline": 120,
@@ -334,6 +395,13 @@ curl -X POST "http://localhost:8000/api/predictive-lead-ai/score" \
 		"engagement_score": 0.7,
 		"recency_score": 0.9
 	}'
+```
+
+Colecao executavel de exemplos (inclui P15):
+
+```bash
+cd backend
+bash EXAMPLES.sh
 ```
 
 Request (`POST /api/predictive-lead-ai/score`):
@@ -560,14 +628,27 @@ docker-compose logs -f frontend
 ### Backend
 
 ```bash
-# Unit tests
-pytest app/tests
+# Run all backend tests
+cd backend
+pytest tests -q
 
 # With coverage
-pytest --cov=app app/tests
+pytest tests --cov=app --cov-report=term-missing
 
-# Specific test
-pytest app/tests/test_leads.py::test_create_lead
+# Composer route logic
+pytest tests/test_composer_routes_logic.py -q
+
+# Execution status transitions
+pytest tests/test_execution_status_transitions.py -q
+
+# Growth, predictive and contract routes
+pytest tests/test_growth_predictive_contracts_routes.py -q
+
+# Earth market adoption routes
+pytest tests/test_earth_market_adoption_routes.py -q
+
+# Revenue runtime routes
+pytest tests/test_revenue_runtime_routes.py -q
 ```
 
 ### Frontend
@@ -575,6 +656,10 @@ pytest app/tests/test_leads.py::test_create_lead
 ```bash
 # Not yet implemented (add vitest)
 ```
+
+Observacao:
+- Os testes de backend ficam em `backend/tests`.
+- Ignore arquivos em `backend/tests/__pycache__` (artefatos locais do Python).
 
 ## 📋 CI/CD
 
@@ -594,6 +679,43 @@ Workflows automáticos:
 - HTTPS ready
 
 ## 📈 Monitoramento
+
+### Health operacional
+
+Endpoint:
+
+```text
+GET /health
+```
+
+Exemplo de resposta:
+
+```json
+{
+	"status": "healthy",
+	"app": "GAME MKT",
+	"version": "2.0.0",
+	"interplanetary_subscribers": {
+		"enabled": true,
+		"reason": "running",
+		"subjects": [
+			"game.interplanetary.experience.started",
+			"game.interplanetary.experience.completed",
+			"game.holographic.sale.closed"
+		]
+	}
+}
+```
+
+Observacao:
+- `enabled=false` com `reason=event_bus_unavailable` indica API operante sem NATS disponivel.
+
+Teste rapido com curl:
+
+```bash
+curl -s http://localhost:8000/health | cat
+curl -s http://localhost:8000/api/interplanetary/experience/telemetry | cat
+```
 
 ### Jaeger Tracing
 ```
@@ -638,6 +760,16 @@ docker stack deploy -c docker-compose.yml game-mkt
 4. Open Pull Request
 
 ## 📝 Changelog
+
+### v2.0.2 (2026-05-10)
+- Inclusao dos endpoints de Interplanetary Experience na secao de API
+- Documentacao do contrato operacional de `GET /health`
+- Exemplo de payload com estado dos subscribers interplanetarios
+
+### v2.0.1 (2026-05-10)
+- README atualizado com comandos reais da suite de testes backend
+- Caminhos de testes ajustados para `backend/tests`
+- Inclusao de comandos de validacao por dominio (composer, growth, revenue)
 
 ### v2.0.0 (2026-05-08)
 - Monolito enterprise inicial

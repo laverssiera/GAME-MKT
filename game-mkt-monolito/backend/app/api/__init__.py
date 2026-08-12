@@ -11,6 +11,11 @@ from app.api.routes.federation import router as federation_router
 from app.api.routes.campaign_contracts import router as campaign_contracts_router
 from app.api.routes.growth_runtime import router as growth_runtime_router
 from app.api.routes.predictive_lead_ai import router as predictive_lead_ai_router
+from app.api.routes.interplanetary_experience import router as interplanetary_experience_router
+from app.api.routes.interplanetary import router as interplanetary_router
+from app.api.routes.interplanetary_runtime import router as interplanetary_runtime_router
+from app.api.routes.marketing import router as marketing_router
+from app.api.routes.earth_market_adoption_runtime import router as earth_market_adoption_runtime_router
 
 router = APIRouter()
 
@@ -25,3 +30,8 @@ router.include_router(federation_router)
 router.include_router(campaign_contracts_router)
 router.include_router(growth_runtime_router)
 router.include_router(predictive_lead_ai_router)
+router.include_router(interplanetary_experience_router)
+router.include_router(interplanetary_router)
+router.include_router(marketing_router, prefix="/marketing", tags=["Marketing"])
+router.include_router(interplanetary_runtime_router)
+router.include_router(earth_market_adoption_runtime_router)
