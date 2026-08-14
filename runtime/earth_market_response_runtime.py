@@ -18,14 +18,32 @@ def _status(score: float) -> str:
     return "stabilizing"
 
 
+def _as_float(value, default: float = 0.0) -> float:
+    if value is None or value == "":
+        return default
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def _as_int(value, default: int = 0) -> int:
+    if value is None or value == "":
+        return default
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return default
+
+
 def evaluate_market_response(payload: dict) -> dict:
-    policy_impact = _clamp(float(payload.get("policy_impact", 0.0)))
-    infrastructure_quality = _clamp(float(payload.get("infrastructure_quality", 0.0)))
-    investment_capacity = _clamp(float(payload.get("investment_capacity", 0.0)))
-    regulatory_support = _clamp(float(payload.get("regulatory_support", 0.0)))
-    consumer_trust = _clamp(float(payload.get("consumer_trust", 0.0)))
-    competitor_pressure = _clamp(float(payload.get("competitor_pressure", 0.0)))
-    population_size = max(int(payload.get("population_size", 0)), 0)
+    policy_impact = _clamp(_as_float(payload.get("policy_impact", 0.0)))
+    infrastructure_quality = _clamp(_as_float(payload.get("infrastructure_quality", 0.0)))
+    investment_capacity = _clamp(_as_float(payload.get("investment_capacity", 0.0)))
+    regulatory_support = _clamp(_as_float(payload.get("regulatory_support", 0.0)))
+    consumer_trust = _clamp(_as_float(payload.get("consumer_trust", 0.0)))
+    competitor_pressure = _clamp(_as_float(payload.get("competitor_pressure", 0.0)))
+    population_size = max(_as_int(payload.get("population_size", 0)), 0)
     normalized_population = _clamp(population_size / 10_000_000) if population_size else 0.0
 
     score = _clamp(

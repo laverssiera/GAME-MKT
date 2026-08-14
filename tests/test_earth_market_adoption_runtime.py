@@ -85,3 +85,37 @@ def test_evaluate_earth_market_adoption_clamps_out_of_range_inputs():
 
     assert 0 <= result["summary"]["overall_readiness"] <= 1
     assert result["projections"]["reachable_population"] <= result["projections"]["population_size"]
+
+
+def test_evaluate_earth_market_adoption_handles_string_and_invalid_values():
+    result = module.evaluate_earth_market_adoption(
+        {
+            "population_size": "2000000",
+            "reachable_population": "1200000",
+            "awareness_rate": "0.78",
+            "trial_rate": "0.62",
+            "repeat_rate": "0.66",
+            "organic_growth": "0.59",
+            "trust_index": "0.71",
+            "utility_score": "0.8",
+            "price_accessibility": "0.61",
+            "social_proof": "0.69",
+            "campaign_reach": "0.73",
+            "campaign_quality": "0.7",
+            "campaign_frequency": "6",
+            "base_demand": "0.75",
+            "seasonality": "0.6",
+            "supply_friction": "0.2",
+            "basket_growth": "0.57",
+            "churn_rate": "0.18",
+            "stakeholder_alignment": "0.72",
+            "partner_activation": "0.66",
+            "regulator_support": "0.58",
+            "community_advocacy": "bad-value",
+        }
+    )
+
+    assert 0 <= result["summary"]["overall_readiness"] <= 1
+    assert result["projections"]["reachable_population"] >= 0
+    assert result["projections"]["expected_adopters"] >= 0
+    assert result["projections"]["adoption_gap"] >= 0

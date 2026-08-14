@@ -33,6 +33,24 @@ def _dimension(score: float, drivers: dict[str, float]) -> dict:
     }
 
 
+def _as_float(value, default: float = 0.0) -> float:
+    if value is None or value == "":
+        return default
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def _as_int(value, default: int = 0) -> int:
+    if value is None or value == "":
+        return default
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return default
+
+
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Earth market adoption runtime (WAVE P15)")
 
@@ -69,37 +87,37 @@ def _build_parser() -> argparse.ArgumentParser:
 
 
 def evaluate_earth_market_adoption(payload: dict) -> dict:
-    population_size = max(int(payload.get("population_size", 0)), 0)
-    reachable_population = max(int(payload.get("reachable_population", 0)), 0)
+    population_size = max(_as_int(payload.get("population_size", 0)), 0)
+    reachable_population = max(_as_int(payload.get("reachable_population", 0)), 0)
     reachable_population = min(reachable_population, population_size) if population_size else reachable_population
 
-    awareness_rate = _clamp(float(payload.get("awareness_rate", 0.0)))
-    trial_rate = _clamp(float(payload.get("trial_rate", 0.0)))
-    repeat_rate = _clamp(float(payload.get("repeat_rate", 0.0)))
-    organic_growth = _clamp(float(payload.get("organic_growth", 0.0)))
+    awareness_rate = _clamp(_as_float(payload.get("awareness_rate", 0.0)))
+    trial_rate = _clamp(_as_float(payload.get("trial_rate", 0.0)))
+    repeat_rate = _clamp(_as_float(payload.get("repeat_rate", 0.0)))
+    organic_growth = _clamp(_as_float(payload.get("organic_growth", 0.0)))
 
-    trust_index = _clamp(float(payload.get("trust_index", 0.0)))
-    utility_score = _clamp(float(payload.get("utility_score", 0.0)))
-    price_accessibility = _clamp(float(payload.get("price_accessibility", 0.0)))
-    social_proof = _clamp(float(payload.get("social_proof", 0.0)))
+    trust_index = _clamp(_as_float(payload.get("trust_index", 0.0)))
+    utility_score = _clamp(_as_float(payload.get("utility_score", 0.0)))
+    price_accessibility = _clamp(_as_float(payload.get("price_accessibility", 0.0)))
+    social_proof = _clamp(_as_float(payload.get("social_proof", 0.0)))
 
-    campaign_reach = _clamp(float(payload.get("campaign_reach", 0.0)))
-    campaign_quality = _clamp(float(payload.get("campaign_quality", 0.0)))
-    campaign_frequency = max(float(payload.get("campaign_frequency", 0.0)), 0.0)
+    campaign_reach = _clamp(_as_float(payload.get("campaign_reach", 0.0)))
+    campaign_quality = _clamp(_as_float(payload.get("campaign_quality", 0.0)))
+    campaign_frequency = max(_as_float(payload.get("campaign_frequency", 0.0)), 0.0)
     campaign_frequency_norm = _clamp(campaign_frequency / 8.0)
 
-    base_demand = _clamp(float(payload.get("base_demand", 0.0)))
-    seasonality = _clamp(float(payload.get("seasonality", 0.0)))
-    supply_friction = _clamp(float(payload.get("supply_friction", 0.0)))
+    base_demand = _clamp(_as_float(payload.get("base_demand", 0.0)))
+    seasonality = _clamp(_as_float(payload.get("seasonality", 0.0)))
+    supply_friction = _clamp(_as_float(payload.get("supply_friction", 0.0)))
 
-    basket_growth = _clamp(float(payload.get("basket_growth", 0.0)))
-    churn_rate = _clamp(float(payload.get("churn_rate", 0.0)))
+    basket_growth = _clamp(_as_float(payload.get("basket_growth", 0.0)))
+    churn_rate = _clamp(_as_float(payload.get("churn_rate", 0.0)))
     churn_resilience = _clamp(1.0 - churn_rate)
 
-    stakeholder_alignment = _clamp(float(payload.get("stakeholder_alignment", 0.0)))
-    partner_activation = _clamp(float(payload.get("partner_activation", 0.0)))
-    regulator_support = _clamp(float(payload.get("regulator_support", 0.0)))
-    community_advocacy = _clamp(float(payload.get("community_advocacy", 0.0)))
+    stakeholder_alignment = _clamp(_as_float(payload.get("stakeholder_alignment", 0.0)))
+    partner_activation = _clamp(_as_float(payload.get("partner_activation", 0.0)))
+    regulator_support = _clamp(_as_float(payload.get("regulator_support", 0.0)))
+    community_advocacy = _clamp(_as_float(payload.get("community_advocacy", 0.0)))
 
     market_adoption = _clamp(
         (0.35 * awareness_rate)

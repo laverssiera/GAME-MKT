@@ -83,3 +83,57 @@ def test_earth_market_simulation_runtime_aggregates_components():
     assert result["demand"]["summary"]["score"] >= 0
     assert result["market_response"]["summary"]["score"] >= 0
     assert result["summary"]["status"] in {"accelerating", "positive", "watch", "stabilizing"}
+
+
+def test_earth_market_runtime_handles_string_inputs_and_channel_lists():
+    demand = demand_module.evaluate_earth_demand(
+        {
+            "market_name": "Earth Market",
+            "population_size": "3200000",
+            "market_size": "0.8",
+            "awareness_rate": "0.7",
+            "trial_rate": "0.6",
+            "repeat_rate": "0.72",
+            "price_accessibility": "0.9",
+            "competitor_pressure": "not-a-number",
+            "seasonality": "0.5",
+        }
+    )
+    assert 0 <= demand["summary"]["score"] <= 1
+    assert demand["drivers"]["competitor_pressure"] == 0.0
+
+    response = response_module.evaluate_market_response(
+        {
+            "market_name": "Earth Market",
+            "policy_impact": "0.9",
+            "infrastructure_quality": "bad",
+            "investment_capacity": "0.8",
+            "regulatory_support": "0.75",
+            "consumer_trust": "0.7",
+            "competitor_pressure": "0.2",
+            "population_size": "3500000",
+        }
+    )
+    assert 0 <= response["summary"]["score"] <= 1
+
+    simulation = simulation_module.simulate_earth_market(
+        {
+            "market_name": "Earth Market",
+            "population_size": 3500000,
+            "market_size": 0.7,
+            "awareness_rate": 0.8,
+            "trial_rate": 0.7,
+            "repeat_rate": 0.75,
+            "price_accessibility": 0.72,
+            "competitor_pressure": 0.28,
+            "seasonality": 0.66,
+            "policy_impact": 0.82,
+            "infrastructure_quality": 0.76,
+            "investment_capacity": 0.84,
+            "regulatory_support": 0.73,
+            "consumer_trust": 0.7,
+            "campaign_budget": "180000",
+            "campaign_channels": "digital,retail,partners",
+        }
+    )
+    assert simulation["campaign"]["channels"] == ["digital", "retail", "partners"]
